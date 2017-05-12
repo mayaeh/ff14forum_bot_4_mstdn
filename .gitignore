@@ -1,0 +1,11 @@
+.*.swp
+*.*~
+.DS_Store
+._*
+error.log
+b.db
+environment.inc.php
+include/composer/composer.lock
+include/composer/vendor
+include/composer/bin
+

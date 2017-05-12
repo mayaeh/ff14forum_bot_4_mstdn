@@ -1,0 +1,6 @@
+{
+    "require": {
+        "abraham/twitteroauth": "^0.6.4",
+        "thecodingcompany/php-mastodon": "^1.0"
+    }
+}
