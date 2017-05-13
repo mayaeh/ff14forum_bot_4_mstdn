@@ -82,8 +82,15 @@ if(is_array($html_array)) {
 
 			if (preg_match ("/<\/blockquote>/iu", $line, $matches)) {
 
-				$post_array[$j]['text'] = preg_replace ( 
-					"/\n{2,}/u", "\n", $text);
+				$text = preg_replace ("/\n{2,}/u", "\n", $text);
+
+				if (mb_strlen($text) > TOOT_MAX_LENGTH) {
+
+					$text = mb_substr($text, 0, TOOT_MAX_LENGTH -4) . 
+					" ...";
+				}
+
+				$post_array[$j]['text'] = $text;
 
 				$text = null;
 				$content_flag = null;
