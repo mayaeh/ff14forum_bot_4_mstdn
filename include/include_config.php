@@ -1,7 +1,7 @@
 <?php
 // written by maya minatsuki
 // made this file : 2017.05.12
-// last mod. : 2017.05.12
+// last mod. : 2017.05.13
 //
 
 
@@ -17,6 +17,7 @@ if ( ! function_exists ('sqlite_escape_string') ) {
 	require_once ( MAYALIB_DIR . 'sqlite_escape_string.inc.php' ) ;
 }
 
+require_once ( MAYALIB_DIR . 'gshorten.inc.php' ) ;
 
 
 ?>
