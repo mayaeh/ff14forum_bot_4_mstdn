@@ -106,10 +106,7 @@ if(is_array($html_array)) {
 
 			$url = $forum_base_url. $matches[1];
 
-			$post_array[$j]['url'] = gshorten($url);
-//			$post_array[$j]['url'] = $url;
-
-			sleep(1);
+			$post_array[$j]['url'] = $url;
 
 		}
 
@@ -151,36 +148,121 @@ if(is_array($html_array)) {
 		}
 
 		// for debug
-		if ($j>2) {
+//		if ($j>2) {
 
-			break;
-		}
+//			break;
+//		}
+
 	}
 
 
 
 }
 
-var_dump ($post_array);
+// for debug
+//var_dump ($post_array);
+//var_dump(toDB($post_array));
+//var_dump(db_exists_check($post_array));
+//exit;
 
 
+$url = 
+$recv = 
+$reverse_array = 
+$tooted_array = null;
+
+$reverse_array = array_reverse($post_array);
 
 
+// for debug
+//var_dump($reverse_array);
+//exit;
 
 
+$db_exists_flg = db_exists_check($reverse_array);
 
-exit;
+
+// for debug
+//var_dump($db_exists_flg);
+//exit;
 
 
 $t = new \theCodingCompany\Mastodon();
 
-$text ='';
-$visibility = $in_reply_to_id = null;
+for ($i = 0; $i < count($reverse_array); $i++) {
 
-$recv = $t -> postStatus 
-	($text, $visibility, $in_reply_to_id);
+// for debug
+//if($i>1) {
+//var_dump($db_exists_flg[$i]);
+//exit;
+//}
 
-var_dump($recv);
+	if($db_exists_flg[$i]<1) {
+
+// for debug
+//var_dump($db_exists_flg[$i]);
+//var_dump ($reverse_array[$i]['url']);
+//exit;
+
+		if($reverse_array[$i]['url']) {
+
+			$url = gshorten($reverse_array[$i]['url']);
+		}
+
+// for debug
+//var_dump($url);
+//exit;
+
+
+//		$text = $reverse_array[$i]['text']. 
+//			" (". $reverse_array[$i]['user']. 
+//			") \n". $url ;
+
+		$text = 
+			$reverse_array[$i]['datetime']. "\n" . 
+			$reverse_array[$i]['user']. ":\n" . 
+			$reverse_array[$i]['text']. "\n". 
+			$url ;
+
+		$recv = $t -> postStatus 
+			($text, null, null);
+
+
+// for debug
+//var_dump($text);
+//var_dump($recv);
+//$recv['id'] = 1;
+//exit;
+
+
+		if (is_int($recv['id'])) {
+
+			$tooted_array[] = $reverse_array[$i];
+		}
+
+// for debug
+//if($i >20) {
+//break;
+//}
+
+
+		sleep(1);
+
+		$url = 
+		$recv = null;
+	}
+}
+
+// for debug
+//var_dump($tooted_array);
+//var_dump(db_exists_check($tooted_array));
+//exit;
+
+if ($tooted_array) {
+
+	var_dump(toDB($tooted_array));
+}
+
 
 exit;
 
