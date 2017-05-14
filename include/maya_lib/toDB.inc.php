@@ -21,6 +21,7 @@ function toDB ($post_array) {
 
 	foreach ($post_array as $post_1_array) {
 
+		$db_res = null;
 
 // for debug
 //return $post_1_array;

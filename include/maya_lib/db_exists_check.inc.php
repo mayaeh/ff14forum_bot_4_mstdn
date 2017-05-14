@@ -20,6 +20,7 @@ function db_exists_check ($post_array) {
 
 	foreach ($post_array as $post_1_array) {
 
+		$db_res = null;
 
 
 // for debug
