@@ -1,0 +1,34 @@
+<?php
+
+// for debug
+ini_set ('error_reporting', E_ALL);
+
+
+// スクリプト設置ディレクトリ
+define ('SCRIPT_DIR', "./");
+
+// 書き出すディレクトリのパス
+define ('OUTPUT_DIR_NAME', SCRIPT_DIR);
+
+// SQLite DB ファイル名
+define ('DB_FILE', SCRIPT_DIR. 'b.db');
+
+
+
+// for Mastodon start
+
+// toot 本文の最大文字数。実際にはこれよりも URL 分長くなる
+define ('TOOT_MAX_LENGTH', 480);
+
+define ('MSTDN_CLIENT_ID', '');
+
+define ('MSTDN_CLIENT_SECRET', '');
+
+define ('MSTDN_CLIENT_BEARER_TOKEN', '');
+
+// for Mastodon end
+
+define ('GOOGLE_SHORTEN_API_KEY', '');
+
+
+?>
