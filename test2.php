@@ -97,14 +97,14 @@ if(is_array($html_array)) {
 			$post_array[$j]['user'] = $matches[1];
 		}
 
-		elseif (preg_match("/^\s+<a\shref=\"(threads\/[0-9]+\-[0-9A-Z%\.\-_=]+\?p=[0-9]+#post[0-9]+)\">/iu", $line, $matches)) {
+		elseif (preg_match("/^(\t+\s【\固\定】)?\s+<a\shref=\"(threads\/[0-9]+\-[0-9A-Z%\.\-_=]+\?p=[0-9]+#post[0-9]+)\">/iu", $line, $matches)) {
 
 //var_dump(array($i, $line, $matches));
 
 //var_dump($forum_base_url.$matches[1]);
 
 
-			$url = $forum_base_url. $matches[1];
+			$url = $forum_base_url. $matches[2];
 
 			$post_array[$j]['url'] = $url;
 
