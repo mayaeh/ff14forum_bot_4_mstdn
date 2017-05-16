@@ -13,7 +13,8 @@ define ('OUTPUT_DIR_NAME', SCRIPT_DIR);
 // SQLite DB ファイル名
 define ('DB_FILE', SCRIPT_DIR. 'b.db');
 
-
+// 取得する URL or HTML ファイル名
+define ('FORUM_HTML', '');
 
 // for Mastodon start
 

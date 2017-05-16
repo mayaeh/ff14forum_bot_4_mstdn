@@ -4,10 +4,15 @@ require_once('config.php');
 
 
 
+if (!defined(FORUM_HTML)) {
 
+	$html = file_get_contents(FORUM_HTML);
+}
+else {
 
-// for debug
-$html = file_get_contents('search.html');
+	exit('FORUM_HTML not defined. please check environment.inc.php. terminated.'."\n");
+}
+
 $html_array = null;
 
 if($html) {
@@ -15,6 +20,10 @@ if($html) {
 	$array = explode("\r\n", $html);
 
 	$html_array = array_slice($array, 230, 2000);
+}
+else {
+
+	exit('$html is null or false. terminated.'."\n");
 }
 
 //var_dump(count($html_array));
