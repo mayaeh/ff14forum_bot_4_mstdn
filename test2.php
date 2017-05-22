@@ -54,25 +54,28 @@ if(is_array($html_array)) {
 
 		}
 
-		elseif (preg_match("/span\sclass=\"date\">([0-9\/]+)&nbsp;<span\sclass=\"time\">([0-9:]+)<\/span><\/span>/iu", $line, $matches)) {
+		elseif (preg_match("/span\sclass=\"date\">([0-9]{2})\-([0-9]{2})\-([0-9]{4})&nbsp;<span\sclass=\"time\">([0-9]{2}):([0-9]{2})\s([A|P]M)<\/span><\/span>/iu", $line, $matches)) {
 
 //var_dump(array($i, $line, $matches));
 //exit;
 
-			$post_array[$j]['datetime'] = 
-				$matches[1]. " ". 
-				$matches[2];
+			$datetime = $matches[3]. "/". $matches[1]. "/". $matches[2]. 
+				" ". $matches[4]. ":". $matches[5]. " ". $matches[6];
 
+			$post_array[$j]['datetime'] = 
+				date("Y/m/d H:i", strtotime($datetime));
 		}
 
-		elseif (preg_match("/span\sclass=\"date\">(今日)&nbsp;<span\sclass=\"time\">([0-9:]+)<\/span><\/span>/iu", $line, $matches)) {
+		elseif (preg_match("/span\sclass=\"date\">(Today)&nbsp;<span\sclass=\"time\">([0-9]{2}):([0-9]{2})\s([A|P]M)<\/span><\/span>/iu", $line, $matches)) {
 
 //var_dump(array($i, $line, $matches));
 //exit;
 
+			$datetime = date("Y/m/d"). " ". 
+				$matches[2]. ":". $matches[3]. " ". $matches[4];
+
 			$post_array[$j]['datetime'] = 
-				date("Y/m/d"). " ". 
-				$matches[2];
+				date("Y/m/d H:i", strtotime($datetime));
 
 // for debug
 //$post_array[$j]['datetime'] = "2017/05/13 ". 
@@ -82,14 +85,16 @@ if(is_array($html_array)) {
 
 		}
 
-		elseif (preg_match("/span\sclass=\"date\">(昨日)&nbsp;<span\sclass=\"time\">([0-9:]+)<\/span><\/span>/iu", $line, $matches)) {
+		elseif (preg_match("/span\sclass=\"date\">(Yesterday)&nbsp;<span\sclass=\"time\">([0-9]{2}):([0-9]{2})\s([A|P]M)<\/span><\/span>/iu", $line, $matches)) {
 
 //var_dump(array($i, $line, $matches));
 //exit;
 
+			$datetime = date("Y/m/d", mktime(0, 0, 0, date("m"), date("d")-1)). 
+				" ". $matches[2]. ":". $matches[3]. " ". $matches[4];
+
 			$post_array[$j]['datetime'] = 
-				date("Y/m/d", mktime(0, 0, 0, date("m"), date("d")-1)). " ". 
-				$matches[2];
+				date("Y/m/d H:i", strtotime($datetime));
 
 // for debug
 //$post_array[$j]['datetime'] = "2017/05/12 ". 
@@ -99,14 +104,14 @@ if(is_array($html_array)) {
 
 		}
 
-		elseif (preg_match("/投稿者\s<a\shref=\"members\/[0-9]+\-[0-9a-z_\-]+\">([0-9a-z_\-]+)<\/a>/iu", $line, $matches)) {
+		elseif (preg_match("/by\s<a\shref=\"members\/[0-9]+\-[0-9a-z_\-]+\">([0-9a-z_\-]+)<\/a>/iu", $line, $matches)) {
 
 //var_dump(array($i, $line, $matches));
 
 			$post_array[$j]['user'] = $matches[1];
 		}
 
-		elseif (preg_match("/^(\t+\s【\固\定】)?\s+<a\shref=\"(threads\/[0-9]+\-[0-9A-Z%\.\-_=]+\?p=[0-9]+#post[0-9]+)\">/iu", $line, $matches)) {
+		elseif (preg_match("/^(\t+Sticky:)?\s+<a\shref=\"(threads\/[0-9]+\-[0-9A-Z%\.\-_=]+\?p=[0-9]+#post[0-9]+)\">/iu", $line, $matches)) {
 
 //var_dump(array($i, $line, $matches));
 
