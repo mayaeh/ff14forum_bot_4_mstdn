@@ -9,6 +9,7 @@ date_default_timezone_set ( 'Asia/Tokyo' ) ;
 
 mb_internal_encoding ( "UTF-8" ) ;
 
+$message = null;
 
 // 環境設定ファイルからスクリプト設置ディレクトリの設定を読み込む
 if ( is_readable ( 'environment.inc.php' ) ) {
@@ -27,8 +28,22 @@ if ( ! defined ( 'SCRIPT_DIR' ) ) {
 	exit ($message) ;
 }
 
+if ( ! defined ('DB_FILE') ) {
+
+	$message .= "DB_FILE の設定を読み込めませんでした。environment.inc.php を確認してください。\n" ;
+	exit ($message) ;
+}
+else {
+
+	if ( ! is_writable(DB_FILE) ) {
+
+		$message .= "DB_FILE に書き込めないようです。確認してください。\n" ;
+		exit ($message) ;
+	}
+}
+
 // file_get_contents でのアクセス時用にユーザーエージェントを設定
-ini_set ( 'user_agent' , 'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko' ) ;
+ini_set ( 'user_agent' , 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:53.0) Gecko/20100101 Firefox/53.0');
 
 
 // エラーログのパス及びファイル名
