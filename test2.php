@@ -4,7 +4,7 @@ require_once('config.php');
 
 
 
-if (!defined(FORUM_HTML)) {
+if (defined('FORUM_HTML')) {
 
 	$html = file_get_contents(FORUM_HTML);
 }
