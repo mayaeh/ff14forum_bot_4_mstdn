@@ -139,12 +139,6 @@ if(is_array($html_array)) {
 
 				$text = preg_replace ("/\n{2,}/u", "\n", $text);
 
-				if (mb_strlen($text) > TOOT_MAX_LENGTH) {
-
-					$text = mb_substr($text, 0, TOOT_MAX_LENGTH -4) . 
-					" ...";
-				}
-
 				$post_array[$j]['text'] = $text;
 
 				$text = null;
@@ -218,13 +212,28 @@ for ($i = 0; $i < count($reverse_array); $i++) {
 //var_dump ($reverse_array[$i]['url']);
 //exit;
 
-		if($reverse_array[$i]['url']) {
+		$reverse_array[$i]['text_length'] = 
+			mb_strlen($reverse_array[$i]['text']);
 
-			$url = gshorten($reverse_array[$i]['url']);
+		$reverse_array[$i]['url_length'] = 
+			mb_strlen($reverse_array[$i]['url']);
+
+		if ($reverse_array[$i]['text_length'] + $reverse_array[$i]['url_length'] > TOOT_MAX_LENGTH) {
+
+			$reverse_array[$i]['text_short'] = 
+				mb_substr($reverse_array[$i]['text'], 0, 
+				TOOT_MAX_LENGTH - $reverse_array[$i]['url_length'] -4) . 
+				" ...";
 		}
+		else {
+
+			$reverse_array[$i]['text_short'] = $reverse_array[$i]['text'];
+		}
+	}
+
 
 // for debug
-//var_dump($url);
+//var_dump($reverse_array[$i]['url_length']);
 //exit;
 
 
@@ -235,8 +244,8 @@ for ($i = 0; $i < count($reverse_array); $i++) {
 		$text = 
 			$reverse_array[$i]['datetime']. "\n" . 
 			$reverse_array[$i]['user']. ":\n" . 
-			$reverse_array[$i]['text']. "\n". 
-			$url ;
+			$reverse_array[$i]['text_short']. "\n". 
+			$reverse_array[$i]['url'] ;
 
 		$recv = $t -> postStatus 
 			($text, null, null);
