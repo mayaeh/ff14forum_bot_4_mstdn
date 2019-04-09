@@ -7,23 +7,52 @@ function toot_post($text) {
         return;
     }
 
+//for debug
+//return $text;
 
-    $text = rawurlencode($text);
+//    $text = rawurlencode($text);
 
-    $query  = "curl -X POST";
-    $query .= " -d 'status=" . $text . "'";
-    $query .= " -d 'visibility=direct'";
-    $query .= " --header 'Authorization: Bearer " . MSTDN_OAUTH_TOKEN . "'";
+    $post_data = [
+
+        'status' => $text,
+        'visibility' => 'direct',
+    ];
+
+    $url = "https://".  MSTDN_URL . '/api/v1/statuses';
+
+    $curl = curl_init($url);
+
+    $header = 'Authorization: Bearer '. MSTDN_OAUTH_TOKEN;
+
+    $curl_options = [
+
+        CURLOPT_HTTPHEADER => array($header),
+
+        CURLOPT_POST => true,
+
+        CURLOPT_POSTFIELDS => http_build_query($post_data),
+    ];
+
+    curl_setopt_array($curl, $curl_options);
+
+    $result = curl_exec($curl);
+
+    curl_close($curl);
+
+//    $query  = "curl -X POST";
+//    $query .= " -d 'status=" . $text . "'";
+//    $query .= " -d 'visibility=direct'";
+//    $query .= " --header 'Authorization: Bearer " . MSTDN_OAUTH_TOKEN . "'";
 //    $query .= " --header 'Content-Type:application/json'";
-    $query .= " -sS https://" . MSTDN_URL . "/api/v1/statuses";
+//    $query .= " -sS https://" . MSTDN_URL . "/api/v1/statuses";
 
 
 // for debug
-return $query;
+//return $query;
 
-$result_json = `$query`;
-$result = print_r($result_json);
+//$result_json = `$query`;
+//$result = print_r($result_json);
 
-return $result;
+    return $result;
 
 }

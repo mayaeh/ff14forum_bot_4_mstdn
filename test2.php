@@ -218,6 +218,7 @@ for ($i = 0; $i < count($reverse_array); $i++) {
 	}
 
 // for debug
+var_dump($reverse_array);
 //var_dump($reverse_array[$i]['url_length']);
 //exit;
 
@@ -239,16 +240,16 @@ for ($i = 0; $i < count($reverse_array); $i++) {
     $result = toot_post($text);
 
 // for debug
-//var_dump($result);
-//exit;
+var_dump($result);
+exit;
 
 	if (is_int($result['id'])) {
 
 		$tooted_array[] = $reverse_array[$i];
 	}
-	else if (is_null($result) {
+	elseif (is_null($result)) {
 
-        exit ('result IS NULL');
+        exit('result IS NULL');
     }
 
 // for debug
@@ -265,7 +266,7 @@ for ($i = 0; $i < count($reverse_array); $i++) {
 // for debug
 //var_dump($tooted_array);
 //var_dump(db_exists_check($tooted_array));
-//exit;
+exit;
 
 if ($tooted_array) {
 
