@@ -22,18 +22,14 @@ function db_exists_check ($post_array) {
 
 		$db_res = null;
 
-
 // for debug
 //return $post_1_array;
 //$tmp_array[] = $post_1_array;
 
-
 		$post_id = (int) $post_1_array ['id'];
-
 
 // for debug
 //$tmp_array[] = $post_id;
-
 
 		$stmt -> bindValue (':id', $post_id, SQLITE3_INTEGER);
 
@@ -43,11 +39,9 @@ function db_exists_check ($post_array) {
 
 		$row_array = $db_res -> fetchArray (SQLITE3_ASSOC);
 
-
 // for debug
 //return $row_array;
 //$tmp_array[] = $row_array;
-
 
 		// 存在しない場合
 		if(is_bool ($row_array)) {
@@ -67,18 +61,11 @@ function db_exists_check ($post_array) {
 	unset($stmt);
 	unset($db_res);
 
-
-
 // for debug
 //$db -> close();
 //return $row_array;
 //return $exists_flg_array;
 //return  $tmp_array;
 
-
 	return $exists_flg_array;
-
-
-
 }
-?>

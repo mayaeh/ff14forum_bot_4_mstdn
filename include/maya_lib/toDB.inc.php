@@ -53,8 +53,6 @@ function toDB ($post_array) {
 	unset($stmt);
 	unset($db_res);
 
-
-
 // for debug
 //$db -> close();
 //return $row_array;
@@ -117,6 +115,4 @@ function toDB ($post_array) {
 	else {
 		return $return_flg;
 	}
-
 }
-?>

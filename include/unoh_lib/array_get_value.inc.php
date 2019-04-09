@@ -12,8 +12,7 @@
  *
  * http://unoh.github.io/2006/11/01/e_notice.html
  */
-function array_get_value ( $array , $key , $default = NULL )
-{
-    return isset ( $array [$key] ) ? $array[$key]: $default ;
+function array_get_value ($array, $key, $default = NULL) {
+
+    return isset ($array[$key]) ? $array[$key]: $default;
 }
-?>

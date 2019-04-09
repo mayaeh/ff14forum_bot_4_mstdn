@@ -2,8 +2,6 @@
 
 require_once('config.php');
 
-
-
 if (defined('FORUM_HTML')) {
 
 	$html = file_get_contents(FORUM_HTML);
@@ -117,13 +115,11 @@ if(is_array($html_array)) {
 
 //var_dump($forum_base_url.$matches[1]);
 
-
 			$url = $forum_base_url. $matches[2];
 
 			$post_array[$j]['url'] = $url;
 
 		}
-
 
 		elseif (preg_match ("/<blockquote\sclass=\"postcontent\srestore\">/iu", $line, $matches)) {
 
@@ -141,7 +137,7 @@ if(is_array($html_array)) {
 
 				$post_array[$j]['text'] = $text;
 
-				$text = null;
+				$text =
 				$content_flag = null;
 
 				$j++;
@@ -151,7 +147,6 @@ if(is_array($html_array)) {
 				$text .= preg_replace (
 					"/\s?<br\s\/>/iu", "\n", preg_replace ( 
 					"/\t+/u", "", $line));
-
 			}
 		}
 
@@ -162,9 +157,6 @@ if(is_array($html_array)) {
 //		}
 
 	}
-
-
-
 }
 
 // for debug
@@ -175,27 +167,21 @@ if(is_array($html_array)) {
 
 
 $url = 
-$recv = 
+$result = 
 $reverse_array = 
 $tooted_array = null;
 
 $reverse_array = array_reverse($post_array);
 
-
 // for debug
 //var_dump($reverse_array);
 //exit;
 
-
 $db_exists_flg = db_exists_check($reverse_array);
-
 
 // for debug
 //var_dump($db_exists_flg);
 //exit;
-
-
-$t = new \theCodingCompany\Mastodon();
 
 for ($i = 0; $i < count($reverse_array); $i++) {
 
@@ -231,49 +217,49 @@ for ($i = 0; $i < count($reverse_array); $i++) {
 		}
 	}
 
-
 // for debug
 //var_dump($reverse_array[$i]['url_length']);
 //exit;
 
 
-//		$text = $reverse_array[$i]['text']. 
-//			" (". $reverse_array[$i]['user']. 
-//			") \n". $url ;
+//	$text = $reverse_array[$i]['text']. 
+//		" (". $reverse_array[$i]['user']. 
+//		") \n". $url ;
 
-		$text = 
-			$reverse_array[$i]['datetime']. "\n" . 
-			$reverse_array[$i]['user']. ":\n" . 
-			$reverse_array[$i]['text_short']. "\n". 
-			$reverse_array[$i]['url'] ;
-
-		$recv = $t -> postStatus 
-			($text, null, null);
-
+	$text = 
+		$reverse_array[$i]['datetime']. "\n" . 
+		$reverse_array[$i]['user']. ":\n" . 
+		$reverse_array[$i]['text_short']. "\n". 
+		$reverse_array[$i]['url'];
 
 // for debug
 //var_dump($text);
-//var_dump($recv);
-//$recv['id'] = 1;
 //exit;
 
+    $result = toot_post($text);
 
-		if (is_int($recv['id'])) {
+// for debug
+//var_dump($result);
+//exit;
 
-			$tooted_array[] = $reverse_array[$i];
-		}
+	if (is_int($result['id'])) {
+
+		$tooted_array[] = $reverse_array[$i];
+	}
+	else if (is_null($result) {
+
+        exit ('result IS NULL');
+    }
 
 // for debug
 //if($i >20) {
 //break;
 //}
 
+	sleep(1);
 
-		sleep(1);
-
-		$url = 
-		$recv = null;
-	}
+	$url = 
+	$result = null;
 }
 
 // for debug
@@ -286,8 +272,4 @@ if ($tooted_array) {
 	var_dump(toDB($tooted_array));
 }
 
-
 exit;
-
-
-?>
