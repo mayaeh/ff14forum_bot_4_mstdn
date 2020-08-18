@@ -31,7 +31,7 @@ if(is_array($html_array)) {
 
 //var_dump($html_array);
 
-	$forum_base_url = 'http://forum.square-enix.com/ffxiv/';
+	$forum_base_url = 'https://forum.square-enix.com/ffxiv/';
 
 	$i = 
 	$j = 0;
