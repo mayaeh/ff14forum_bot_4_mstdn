@@ -19,3 +19,5 @@ require_once (MAYALIB_DIR . 'toDB.inc.php');
 require_once (MAYALIB_DIR . 'db_exists_check.inc.php');
 
 require_once (MAYALIB_DIR . 'toot_post.inc.php');
+
+require_once (MAYALIB_DIR . 'nazrin_shorten.inc.php');
