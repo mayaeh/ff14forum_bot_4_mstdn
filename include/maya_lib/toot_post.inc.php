@@ -2,8 +2,8 @@
 
 function toot_post($text) {
 
-	if (is_null($text) || !defined('MSTDN_URL') || !defined('MSTDN_OAUTH_TOKEN')) {
-		return;
+	if (!$text || !defined('MSTDN_URL') || !defined('MSTDN_OAUTH_TOKEN')) {
+		return null;
 	}
 
 //for debug
