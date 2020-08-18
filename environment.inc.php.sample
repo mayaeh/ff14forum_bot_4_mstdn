@@ -16,6 +16,9 @@ define ('DB_FILE', SCRIPT_DIR. 'b.db');
 // 取得する URL or HTML ファイル名
 define ('FORUM_HTML', '');
 
+// nazr.in の URL
+define ('NAZRIN_URL', 'https://example.com');
+
 // for Mastodon start
 
 define ('MSTDN_URL', '');
