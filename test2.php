@@ -151,10 +151,10 @@ if(is_array($html_array)) {
 		}
 
 		// for debug
-//		if ($j>2) {
+		if ($j>2) {
 
-//			break;
-//		}
+			break;
+		}
 
 	}
 }
@@ -166,9 +166,10 @@ if(is_array($html_array)) {
 //exit;
 
 
-$url = 
-$result = 
-$reverse_array = 
+$url =
+$result =
+$nazrin_result =
+$reverse_array =
 $tooted_array = null;
 
 $reverse_array = array_reverse($post_array);
@@ -191,36 +192,61 @@ for ($i = 0; $i < count($reverse_array); $i++) {
 //exit;
 //}
 
-	if($db_exists_flg[$i]<1) {
+//	if($db_exists_flg[$i]<1) {
+	if($db_exists_flg[$i]<2) {	// for debug
 
 // for debug
 //var_dump($db_exists_flg[$i]);
 //var_dump ($reverse_array[$i]['url']);
 //exit;
 
+		if($reverse_array[$i]['url'] && defined('NAZRIN_URL')) {
+
+			$reverse_array[$i]['shorten_url'] = nazrin_shorten($reverse_array[$i]['url']);
+		}
+
+// for debug
+//var_dump ($reverse_array[$i]['shorten_url']);
+//var_dump ($reverse_array[$i]);
+//exit;
+
 		$reverse_array[$i]['text_length'] = 
 			mb_strlen($reverse_array[$i]['text']);
 
-		$reverse_array[$i]['url_length'] = 
-			mb_strlen($reverse_array[$i]['url']);
-
-		if ($reverse_array[$i]['text_length'] + $reverse_array[$i]['url_length'] > TOOT_MAX_LENGTH) {
-
-			$reverse_array[$i]['text_short'] = 
-				mb_substr($reverse_array[$i]['text'], 0, 
-				TOOT_MAX_LENGTH - $reverse_array[$i]['url_length'] -4) . 
-				" ...";
+		if ($reverse_array[$i]['shorten_url']) {
+			if ($reverse_array[$i]['text_length'] + mb_strlen($reverse_array[$i]['shorten_url']) > TOOT_MAX_LENGTH) {
+				$reverse_array[$i]['text_short'] = 
+					mb_substr($reverse_array[$i]['text'], 0, 
+					TOOT_MAX_LENGTH - mb_strlen($reverse_array[$i]['shorten_url']) -4) . 
+					" ...";
+			}
+			else {
+				$reverse_array[$i]['text_short'] = 
+					$reverse_array[$i]['text'];
+			}
 		}
 		else {
+			$reverse_array[$i]['url_length'] = 
+				mb_strlen($reverse_array[$i]['url']);
 
-			$reverse_array[$i]['text_short'] = $reverse_array[$i]['text'];
+			if ($reverse_array[$i]['text_length'] + $reverse_array[$i]['url_length'] > TOOT_MAX_LENGTH) {
+
+				$reverse_array[$i]['text_short'] = 
+					mb_substr($reverse_array[$i]['text'], 0, 
+					TOOT_MAX_LENGTH - $reverse_array[$i]['url_length'] -4) . 
+					" ...";
+			}
+			else {
+				$reverse_array[$i]['text_short'] = 
+					$reverse_array[$i]['text'];
+			}
 		}
 	}
 
 // for debug
 var_dump($reverse_array);
 //var_dump($reverse_array[$i]['url_length']);
-//exit;
+exit;
 
 
 //	$text = $reverse_array[$i]['text']. 
@@ -237,7 +263,7 @@ var_dump($reverse_array);
 //var_dump($text);
 //exit;
 
-    $result = toot_post($text);
+	$result = toot_post($text);
 
 // for debug
 var_dump($result);
@@ -249,8 +275,8 @@ exit;
 	}
 	elseif (is_null($result)) {
 
-        exit('result IS NULL');
-    }
+		exit('result IS NULL');
+	}
 
 // for debug
 //if($i >20) {
@@ -259,7 +285,7 @@ exit;
 
 	sleep(1);
 
-	$url = 
+	$url =
 	$result = null;
 }
 
@@ -269,7 +295,6 @@ exit;
 exit;
 
 if ($tooted_array) {
-
 	var_dump(toDB($tooted_array));
 }
 
