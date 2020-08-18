@@ -24,6 +24,7 @@ function toot_post($text) {
 
 	$curl_options = [
 		CURLOPT_HTTPHEADER => array($header),
+		CURLOPT_RETURNTRANSFER => true,
 		CURLOPT_POST => true,
 		CURLOPT_POSTFIELDS => http_build_query($post_data),
 	];
