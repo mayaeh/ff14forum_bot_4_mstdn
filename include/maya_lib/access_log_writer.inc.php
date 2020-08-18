@@ -1,8 +1,4 @@
 <?php
-// written by maya minatsuki
-// make this file	2010.09.30
-// last mod		2019.04.09
-
 
 // ---------------------------------------------------------------
 //	エラー発生時等にアクセスログに記録する。
@@ -10,13 +6,11 @@
 // ---------------------------------------------------------------
 function access_log_writer ($chtime, $words) {
 
-	if (is_null ($chtime)) {
-
+	if (!$chtime) {
 		$chtime = time();
 	}
 
-	if (is_null ($words)) {
-
+	if (!$words) {
 		$words = "null" ;
 	}
 
@@ -35,7 +29,6 @@ function access_log_writer ($chtime, $words) {
 		return 1 ;
 	}
 	else {
-
 		exit ("ログファイルが存在しないか、書き込めません！<br />\n");
 	}
 }
