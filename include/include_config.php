@@ -1,9 +1,4 @@
 <?php
-// written by maya minatsuki
-// made this file : 2017.05.12
-// last mod. : 2019.04.09
-//
-
 
 // 連想配列の要素が存在するかチェックする関数
 require_once (SCRIPT_DIR . "include/unoh_lib/array_get_value.inc.php");
