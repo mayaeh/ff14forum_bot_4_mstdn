@@ -24,6 +24,7 @@ else {
 	exit('$html is null or false. terminated.'."\n");
 }
 
+// for debug
 //var_dump(count($html_array));
 //exit;
 
@@ -124,6 +125,8 @@ if(is_array($html_array)) {
 			if (preg_match ("/<\/blockquote>/iu", $line, $matches)) {
 
 				$text = preg_replace ("/\n{2,}/u", "\n", $text);
+
+				$text = preg_replace ("/&lt;iframe\swidth=&quot;560&quot;\sheight=&quot;315&quot;\ssrc=&quot;(https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9]+)&quot;\sframeborder=&quot;0&quot;/u", ' $1 ', $text);
 
 				$post_array[$j]['text'] = $text;
 
