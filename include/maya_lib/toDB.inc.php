@@ -10,25 +10,16 @@ function toDB ($post_array) {
 
 	$db = new SQLite3 (DB_FILE);
 
-// for debug
-//$db = new SQLite3 (SCRIPT_DIR . 'test.db');
-
 	$query = 'SELECT post_id FROM ff14forum_post ' . 
 		'WHERE post_id=:id';
 
 	$stmt = $db -> prepare ($query);
-
-// for debug
-//$status_id='99999';
 
 	$exists_flg_array = array();
 
 	foreach ($post_array as $post_1_array) {
 
 		$db_res = null;
-
-// for debug
-//return $post_1_array;
 
 		$post_id = (int) $post_1_array ['id'];
 
@@ -54,11 +45,6 @@ function toDB ($post_array) {
 	unset($stmt);
 	unset($db_res);
 
-// for debug
-//$db -> close();
-//return $row_array;
-//return $exists_flg_array;
-
 	try {
 		$db -> exec("BEGIN DEFERRED;");
 
@@ -66,8 +52,6 @@ function toDB ($post_array) {
 			"post_id". 
 			") VALUES (". 
 			":post_id)";
-
-//return $query;
 
 		$stmt = $db -> prepare ($query);
 
@@ -99,9 +83,6 @@ function toDB ($post_array) {
 	$db_res = $db -> exec("COMMIT;");
 
 	$db -> close();
-
-// for debug
-//return $db_res;
 
 	if (isset($message)) {
 		return array($return_flg, $message);
