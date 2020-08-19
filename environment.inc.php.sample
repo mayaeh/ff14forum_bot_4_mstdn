@@ -16,20 +16,17 @@ define ('DB_FILE', SCRIPT_DIR. 'b.db');
 // 取得する URL or HTML ファイル名
 define ('FORUM_HTML', '');
 
+// nazr.in の URL
+define ('NAZRIN_URL', 'https://example.com');
+
 // for Mastodon start
+
+define ('MSTDN_URL', '');
+
+define ('MSTDN_OAUTH_TOKEN', '');
 
 // toot 本文の最大文字数。実際にはこれよりも URL 分長くなる
 define ('TOOT_MAX_LENGTH', 480);
 
-define ('MSTDN_CLIENT_ID', '');
-
-define ('MSTDN_CLIENT_SECRET', '');
-
-define ('MSTDN_CLIENT_BEARER_TOKEN', '');
-
 // for Mastodon end
 
-define ('GOOGLE_SHORTEN_API_KEY', '');
-
-
-?>

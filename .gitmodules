@@ -1,3 +1,0 @@
-[submodule "include/mstdnoauth"]
-	path = include/mstdnoauth
-	url = https://github.com/mayaeh/MastodonOAuthPHP.git

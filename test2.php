@@ -2,8 +2,6 @@
 
 require_once('config.php');
 
-
-
 if (defined('FORUM_HTML')) {
 
 	$html = file_get_contents(FORUM_HTML);
@@ -26,19 +24,17 @@ else {
 	exit('$html is null or false. terminated.'."\n");
 }
 
+// for debug
 //var_dump(count($html_array));
 //exit;
 
 if(is_array($html_array)) {
+	$forum_base_url = 'https://forum.square-enix.com/ffxiv/';
 
-//var_dump($html_array);
-
-	$forum_base_url = 'http://forum.square-enix.com/ffxiv/';
-
-	$i = 
+	$i =
 	$j = 0;
 
-	$text = 
+	$text =
 	$content_flag = null;
 
 	for ($i = 0; $i < count($html_array); $i++) {
@@ -49,8 +45,7 @@ if(is_array($html_array)) {
 
 //var_dump(array($i, $line, $matches));
 
-			$post_array[$j]['id'] = 
-				$matches[1];
+			$post_array[$j]['id'] = $matches[1];
 
 		}
 
@@ -84,7 +79,6 @@ if(is_array($html_array)) {
 //exit;
 
 		}
-
 		elseif (preg_match("/span\sclass=\"date\">(Yesterday)&nbsp;<span\sclass=\"time\">([0-9]{2}):([0-9]{2})\s([A|P]M)<\/span><\/span>/iu", $line, $matches)) {
 
 //var_dump(array($i, $line, $matches));
@@ -103,28 +97,22 @@ if(is_array($html_array)) {
 //exit;
 
 		}
-
 		elseif (preg_match("/by\s<a\shref=\"members\/[0-9]+\-[0-9a-z_\-]+\">([0-9a-z_\-]+)<\/a>/iu", $line, $matches)) {
 
 //var_dump(array($i, $line, $matches));
 
 			$post_array[$j]['user'] = $matches[1];
 		}
-
 		elseif (preg_match("/^(\t+Sticky:)?\s+<a\shref=\"(threads\/[0-9]+\-[0-9A-Z%\.\-_=]+\?p=[0-9]+#post[0-9]+)\">/iu", $line, $matches)) {
 
 //var_dump(array($i, $line, $matches));
 
 //var_dump($forum_base_url.$matches[1]);
 
-
 			$url = $forum_base_url. $matches[2];
 
 			$post_array[$j]['url'] = $url;
-
 		}
-
-
 		elseif (preg_match ("/<blockquote\sclass=\"postcontent\srestore\">/iu", $line, $matches)) {
 
 
@@ -132,39 +120,34 @@ if(is_array($html_array)) {
 
 			$content_flag = 1;
 		}
-
 		elseif ($content_flag) {
 
 			if (preg_match ("/<\/blockquote>/iu", $line, $matches)) {
 
 				$text = preg_replace ("/\n{2,}/u", "\n", $text);
 
+				$text = preg_replace ("/&lt;iframe\swidth=&quot;560&quot;\sheight=&quot;315&quot;\ssrc=&quot;(https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9]+)&quot;\sframeborder=&quot;0&quot;/u", ' $1 ', $text);
+
 				$post_array[$j]['text'] = $text;
 
-				$text = null;
+				$text =
 				$content_flag = null;
 
 				$j++;
 			}
 			else {
-
 				$text .= preg_replace (
 					"/\s?<br\s\/>/iu", "\n", preg_replace ( 
 					"/\t+/u", "", $line));
-
 			}
 		}
 
-		// for debug
-//		if ($j>2) {
-
-//			break;
-//		}
+// for debug
+if ($j>2) {
+break;
+}
 
 	}
-
-
-
 }
 
 // for debug
@@ -174,28 +157,23 @@ if(is_array($html_array)) {
 //exit;
 
 
-$url = 
-$recv = 
-$reverse_array = 
+$url =
+$result =
+$nazrin_result =
+$reverse_array =
 $tooted_array = null;
 
 $reverse_array = array_reverse($post_array);
-
 
 // for debug
 //var_dump($reverse_array);
 //exit;
 
-
 $db_exists_flg = db_exists_check($reverse_array);
-
 
 // for debug
 //var_dump($db_exists_flg);
 //exit;
-
-
-$t = new \theCodingCompany\Mastodon();
 
 for ($i = 0; $i < count($reverse_array); $i++) {
 
@@ -205,75 +183,125 @@ for ($i = 0; $i < count($reverse_array); $i++) {
 //exit;
 //}
 
-	if($db_exists_flg[$i]<1) {
+//	if($db_exists_flg[$i]<1) {
+	if($db_exists_flg[$i]<2) {	// for debug
 
 // for debug
 //var_dump($db_exists_flg[$i]);
 //var_dump ($reverse_array[$i]['url']);
 //exit;
 
+		if($reverse_array[$i]['url'] && defined('NAZRIN_URL')) {
+			$reverse_array[$i]['shorten_url'] = 
+				nazrin_shorten($reverse_array[$i]['url']);
+		}
+
+// for debug
+//var_dump ($reverse_array[$i]['shorten_url']);
+//var_dump ($reverse_array[$i]);
+//var_dump(mb_strlen($reverse_array[$i]['shorten_url']));
+//exit;
+
 		$reverse_array[$i]['text_length'] = 
 			mb_strlen($reverse_array[$i]['text']);
 
-		$reverse_array[$i]['url_length'] = 
-			mb_strlen($reverse_array[$i]['url']);
-
-		if ($reverse_array[$i]['text_length'] + $reverse_array[$i]['url_length'] > TOOT_MAX_LENGTH) {
-
-			$reverse_array[$i]['text_short'] = 
-				mb_substr($reverse_array[$i]['text'], 0, 
-				TOOT_MAX_LENGTH - $reverse_array[$i]['url_length'] -4) . 
-				" ...";
+		if (array_get_value($reverse_array[$i], 'shorten_url')) {
+			if ($reverse_array[$i]['text_length'] + mb_strlen($reverse_array[$i]['shorten_url']) > TOOT_MAX_LENGTH) {
+				$reverse_array[$i]['text_short'] = 
+					mb_substr($reverse_array[$i]['text'], 0, 
+					TOOT_MAX_LENGTH - mb_strlen($reverse_array[$i]['shorten_url']) -4) . 
+					" ...";
+			}
+			else {
+				$reverse_array[$i]['text_short'] = 
+					$reverse_array[$i]['text'];
+			}
 		}
 		else {
+			$reverse_array[$i]['url_length'] = 
+				mb_strlen($reverse_array[$i]['url']);
 
-			$reverse_array[$i]['text_short'] = $reverse_array[$i]['text'];
+			if ($reverse_array[$i]['text_length'] + $reverse_array[$i]['url_length'] > TOOT_MAX_LENGTH) {
+
+				$reverse_array[$i]['text_short'] = 
+					mb_substr($reverse_array[$i]['text'], 0, 
+					TOOT_MAX_LENGTH - $reverse_array[$i]['url_length'] -4) . 
+					" ...";
+			}
+			else {
+				$reverse_array[$i]['text_short'] = 
+					$reverse_array[$i]['text'];
+			}
 		}
 	}
 
-
 // for debug
+//var_dump($reverse_array[$i]);
 //var_dump($reverse_array[$i]['url_length']);
 //exit;
 
 
-//		$text = $reverse_array[$i]['text']. 
-//			" (". $reverse_array[$i]['user']. 
-//			") \n". $url ;
+//	$text = $reverse_array[$i]['text']. 
+//		" (". $reverse_array[$i]['user']. 
+//		") \n". $url ;
 
+	if(array_get_value($reverse_array[$i], 'shorten_url')) {
 		$text = 
 			$reverse_array[$i]['datetime']. "\n" . 
 			$reverse_array[$i]['user']. ":\n" . 
 			$reverse_array[$i]['text_short']. "\n". 
-			$reverse_array[$i]['url'] ;
-
-		$recv = $t -> postStatus 
-			($text, null, null);
-
+			$reverse_array[$i]['shorten_url'];
+	}
+	else {
+		$text = 
+			$reverse_array[$i]['datetime']. "\n" . 
+			$reverse_array[$i]['user']. ":\n" . 
+			$reverse_array[$i]['text_short']. "\n". 
+			$reverse_array[$i]['url'];
+	}
 
 // for debug
 //var_dump($text);
-//var_dump($recv);
-//$recv['id'] = 1;
 //exit;
 
-
-		if (is_int($recv['id'])) {
-
-			$tooted_array[] = $reverse_array[$i];
-		}
+	$result = toot_post($text);
 
 // for debug
-//if($i >20) {
-//break;
-//}
+//var_dump($result);
+//exit;
 
+	if ($result) {
+		$result_json = json_decode($result);
 
-		sleep(1);
-
-		$url = 
-		$recv = null;
+		if (property_exists($result_json, 'id')) {
+			if ($result_json -> id) {
+				$tooted_array[] = $reverse_array[$i];
+			}
+		}
 	}
+	elseif (is_null($result)) {
+		exit('result IS NULL');
+	}
+	else {
+		access_log_writer('', 'result error: '. $result);
+		exit('result error');
+	}
+
+	// 20 件以上ある場合は処理を中断する
+	if($i >20) {
+	break;
+	}
+	
+// for debug
+//var_dump($result_json -> id);
+//var_dump($tooted_array);
+//exit;
+
+	sleep(1);
+
+	$url =
+	$result =
+	$result_json = null;
 }
 
 // for debug
@@ -282,12 +310,7 @@ for ($i = 0; $i < count($reverse_array); $i++) {
 //exit;
 
 if ($tooted_array) {
-
 	var_dump(toDB($tooted_array));
 }
 
-
 exit;
-
-
-?>
