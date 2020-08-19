@@ -2,6 +2,10 @@
 
 function toDB ($post_array) {
 
+	if(!$post_array || !is_array($post_array)) {
+		return null;
+	}
+
 	$return_flg = 0;
 
 	$db = new SQLite3 (DB_FILE);
@@ -38,12 +42,9 @@ function toDB ($post_array) {
 
 		// 存在しない場合
 		if(is_bool ($row_array)) {
-
 			$exists_flg_array[] = 0;
-
 		}
 		else {	// 存在する場合
-
 			$exists_flg_array[] = 1;
 		}
 
@@ -59,7 +60,6 @@ function toDB ($post_array) {
 //return $exists_flg_array;
 
 	try {
-
 		$db -> exec("BEGIN DEFERRED;");
 
 		$query = "INSERT INTO ff14forum_post (". 
@@ -72,11 +72,9 @@ function toDB ($post_array) {
 		$stmt = $db -> prepare ($query);
 
 		for ($i = 0; $i < count($exists_flg_array); $i++) {
-
 			$post_1_array = $post_array [$i];
 
 			if (0 == $exists_flg_array[$i]) {
-
 				$stmt -> bindValue (':post_id', 
 					(int)$post_1_array ['id'], 
 					SQLITE3_INTEGER);
@@ -84,15 +82,12 @@ function toDB ($post_array) {
 				$db_res = $stmt -> execute();
 
 				$return_flg++;
-
 			}
 		}
 
 		unset($post_1_array);
-
 	}
 	catch (Exception $e) {
-
 		// ロールバック
 		$db -> exec("ROLLBACK;");
 		$message = 'SQLの実行でエラーが発生しました。<br>';
@@ -109,7 +104,6 @@ function toDB ($post_array) {
 //return $db_res;
 
 	if (isset($message)) {
-
 		return array($return_flg, $message);
 	}
 	else {
