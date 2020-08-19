@@ -13,7 +13,7 @@ function toot_post($text) {
 
 	$post_data = [
 		'status' => $text,
-		'visibility' => 'direct',
+		'visibility' => 'public',
 	];
 
 	$url = "https://".  MSTDN_URL . '/api/v1/statuses';
